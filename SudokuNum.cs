@@ -1,14 +1,20 @@
 namespace sudoku;
 public class SudokuNum : Control
 {
-    private string displayedString = ""; 
-    public SudokuNum(int x, int y)
+    private string displayedString = "";
+    private Brush labelColor = Brushes.Black;
+    public SudokuNum(int x, int y, int num, bool isGuessSquare)
     {
-        // Set up the initial properties of the control
         SetStyle(ControlStyles.SupportsTransparentBackColor, true);
         BackColor = Color.Transparent;
-        Size = new Size(100, 100);
+        Size = new Size(50, 50);
         Location = new Point(x, y);
+        displayedString = num.ToString();
+        if (isGuessSquare) {
+            labelColor = Brushes.Red;
+        } else {
+            labelColor = Brushes.Black;
+        }
     }
 
     protected override void OnPaint(PaintEventArgs e)
@@ -16,7 +22,7 @@ public class SudokuNum : Control
         base.OnPaint(e);
         Font font = new("Arial", 24);
         if (displayedString != "0") {
-            e.Graphics.DrawString(displayedString, font, Brushes.Black, 0, 0);
+            e.Graphics.DrawString(displayedString, font, labelColor, 0, 0);
         }
         
     }
@@ -25,4 +31,10 @@ public class SudokuNum : Control
         displayedString = num.ToString();
         Invalidate();
     }
+    internal void SetColor(Brush labelColor) {
+        this.labelColor = labelColor;
+        Invalidate();
+    }
+
+
 }
