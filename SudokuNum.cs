@@ -2,7 +2,9 @@ namespace sudoku;
 public class SudokuNum : Control
 {
     private string displayedString = "";
-    private Brush labelColor = Brushes.Black;
+    private bool isGuessSquare = false;
+    private Brush labelColor;
+
     public SudokuNum(int x, int y, int num, bool isGuessSquare)
     {
         SetStyle(ControlStyles.SupportsTransparentBackColor, true);
@@ -10,6 +12,7 @@ public class SudokuNum : Control
         Size = new Size(50, 50);
         Location = new Point(x, y);
         displayedString = num.ToString();
+        this.isGuessSquare = isGuessSquare;
         if (isGuessSquare) {
             labelColor = Brushes.Red;
         } else {
@@ -24,7 +27,6 @@ public class SudokuNum : Control
         if (displayedString != "0") {
             e.Graphics.DrawString(displayedString, font, labelColor, 0, 0);
         }
-        
     }
 
     internal void SetNum(int num) {
@@ -32,12 +34,12 @@ public class SudokuNum : Control
             displayedString = num.ToString();
             Invalidate();
         }
-
-    }
-    internal void SetColor(Brush labelColor) {
-        this.labelColor = labelColor;
-        Invalidate();
     }
 
-
+    internal void SetComplete() {
+        if (isGuessSquare) {
+            labelColor = Brushes.SeaGreen;
+            Invalidate(); 
+        }
+    }
 }

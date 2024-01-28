@@ -8,11 +8,12 @@ public partial class SudokuDisplay : Form
     private readonly SudokuNum[,] labels = new SudokuNum[9,9];
     private readonly Timer updateTimer = new() {Interval = 1};
     private readonly SudokuGame game = new();
-    private readonly int speedTickMultiplier = 10000;
+    private readonly int speedTickMultiplier = 30000;
 
     public SudokuDisplay()
     {
         InitializeComponent();
+        // Add number labels
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 labels[j,i] = new SudokuNum(10 + (110 * i) - 0 + 30,
@@ -22,7 +23,6 @@ public partial class SudokuDisplay : Form
                 Controls.Add(labels[j, i]);
             }
         }
-
         updateTimer.Tick += UpdateBoard;
         updateTimer.Start();
     }
@@ -41,6 +41,11 @@ public partial class SudokuDisplay : Form
 
         // Stop timer if game finished
         if (game.IsComplete()) {
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    labels[j,i].SetComplete();
+                }
+            }
             updateTimer.Stop();
             return;
         }
@@ -50,11 +55,19 @@ public partial class SudokuDisplay : Form
     {
         base.OnPaint(e);
         Graphics graphics = e.Graphics;
-        Pen blackPen = new(Color.Black);
-        for (int i = 0; i < 9; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
+        Pen blackPen = new(Color.Black, 3);
+        // Draw sudoku board
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                graphics.FillRectangle(Brushes.Gainsboro, 10 + (110 * (i + 3)), 10 + (110 * j), 100, 100);
+                graphics.FillRectangle(Brushes.Gainsboro, 10 + (110 * i), 10 + (110 * (j + 3)), 100, 100);
+                graphics.FillRectangle(Brushes.Gainsboro, 10 + (110 * (i + 6)), 10 + (110 * (j + 3)), 100, 100);
+                graphics.FillRectangle(Brushes.Gainsboro, 10 + (110 * (i + 3)), 10 + (110 * (j + 6)), 100, 100);
+            }
+        }
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 graphics.DrawRectangle(blackPen, 10 + (110 * i), 10 + (110 * j), 100, 100);
             }
         }
