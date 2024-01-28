@@ -8,7 +8,7 @@ public partial class SudokuDisplay : Form
     private readonly SudokuNum[,] labels = new SudokuNum[9,9];
     private readonly Timer updateTimer = new() {Interval = 1};
     private readonly SudokuGame game = new();
-    private readonly int speedTickMultiplier = 30;
+    private readonly int speedTickMultiplier = 10000;
 
     public SudokuDisplay()
     {
@@ -23,23 +23,27 @@ public partial class SudokuDisplay : Form
             }
         }
 
-        for (int i = 0; i < speedTickMultiplier; i++) {
-            updateTimer.Tick += UpdateBoard;
-        }
+        updateTimer.Tick += UpdateBoard;
         updateTimer.Start();
     }
 
 
     private void UpdateBoard(object? sender, EventArgs e) {
-        game.Update();
+        for (int i = 0; i < speedTickMultiplier; i++) {
+            game.Update();
+        }
+        // Update the square that was changed
+        foreach ((int j, int i) in game.GetChangedSquares()) {
+            labels[j, i].SetNum(game.GetNum(j,i));
+        }
+
+        game.ClearChangedSquares();
+
         // Stop timer if game finished
         if (game.IsComplete()) {
             updateTimer.Stop();
             return;
         }
-        // Update the square that was changed
-        (int j, int i) = game.GetChangedSquare();
-        labels[j, i].SetNum(game.GetNum(j,i));
     }
 
     protected override void OnPaint(PaintEventArgs e)

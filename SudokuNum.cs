@@ -28,8 +28,11 @@ public class SudokuNum : Control
     }
 
     internal void SetNum(int num) {
-        displayedString = num.ToString();
-        Invalidate();
+        if (num.ToString() != displayedString) {
+            displayedString = num.ToString();
+            Invalidate();
+        }
+
     }
     internal void SetColor(Brush labelColor) {
         this.labelColor = labelColor;
